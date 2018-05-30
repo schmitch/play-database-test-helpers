@@ -6,6 +6,7 @@ scalaVersion := "2.12.6"
 
 lazy val root = (project in file(".")).settings(
   libraryDependencies ++= Seq(
+    slf4jApi    % Provided,
     playJdbcApi % Provided,
     postgresql  % Provided
   )
