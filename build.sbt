@@ -12,6 +12,7 @@ lazy val root = (project in file(".")).settings(
 )
 
 sonatypeProfileName := "de.gccc"
+publishTo := sonatypePublishTo.value
 publishMavenStyle := true
 licenses := Seq("APL2" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt"))
 
@@ -29,4 +30,22 @@ developers := List(
     email = "c.schmitt@briefdomain.de",
     url = url("http://gccc.de")
   )
+)
+
+import ReleaseTransformations._
+releaseCrossBuild := true // true if you cross-build the project for multiple Scala versions
+releaseProcess := Seq[ReleaseStep](
+  checkSnapshotDependencies,
+  inquireVersions,
+  runClean,
+  runTest,
+  setReleaseVersion,
+  commitReleaseVersion,
+  tagRelease,
+  // For non cross-build projects, use releaseStepCommand("publishSigned")
+  releaseStepCommandAndRemaining("+publishSigned"),
+  setNextVersion,
+  commitNextVersion,
+  releaseStepCommand("sonatypeReleaseAll"),
+  pushChanges
 )
