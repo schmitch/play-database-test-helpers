@@ -1,7 +1,7 @@
 import Dependencies._
 
-name := "play-database-test-helpers"
-organization := "de.gccc"
+name := "database-test-helpers"
+organization := "de.gccc.play"
 scalaVersion := "2.12.6"
 
 lazy val root = (project in file(".")).settings(
@@ -23,5 +23,10 @@ scmInfo := Some(
   )
 )
 developers := List(
-  Developer(id = "schmitch", name = "Christian Schmitt", email = "c.schmitt@briefdomain.de", url = url("gccc.de"))
+  Developer(
+    id = "schmitch",
+    name = "Christian Schmitt",
+    email = "c.schmitt@briefdomain.de",
+    url = url("http://gccc.de")
+  )
 )
