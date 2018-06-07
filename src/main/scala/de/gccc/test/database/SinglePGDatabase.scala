@@ -1,7 +1,7 @@
 package de.gccc.test.database
 
 import java.io.PrintWriter
-import java.sql.Savepoint
+import java.sql.{ Savepoint, Statement }
 import java.util.logging.Logger
 import java.util.{ Properties, UUID }
 
@@ -12,7 +12,12 @@ import play.api.db.Database
 
 import scala.util.control.NonFatal
 
-class SinglePGDatabase(override val url: String, username: String, password: String) extends Database {
+class SinglePGDatabase(
+    override val url: String,
+    username: String,
+    password: String,
+    rollbackStatement: Option[Statement => Unit] = None
+) extends Database {
 
   import java.sql.{ Connection, DriverManager }
 
@@ -93,6 +98,16 @@ class SinglePGDatabase(override val url: String, username: String, password: Str
 
   def rollback(savepoint: Savepoint): Unit = {
     internalConnection.rollback(savepoint)
+    // reset sequences, etc, since transaction won't reset them
+    // which would else result in wrong id fields
+    val st = internalConnection.createStatement()
+    try {
+      rollbackStatement.foreach { fn =>
+        fn(st)
+      }
+    } finally {
+      st.close()
+    }
   }
 
   def close(): Unit = {
