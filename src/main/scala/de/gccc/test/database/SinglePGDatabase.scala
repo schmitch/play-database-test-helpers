@@ -8,9 +8,9 @@ import java.util.{ Properties, UUID }
 import javax.sql.DataSource
 import org.postgresql.PGConnection
 import org.postgresql.jdbc.AutoSave
-import play.api.db.Database
+import play.api.db.{ Database, TransactionIsolationLevel }
 
-import scala.util.control.NonFatal
+import scala.util.control.{ ControlThrowable, NonFatal }
 
 class SinglePGDatabase(
     override val url: String,
@@ -115,4 +115,7 @@ class SinglePGDatabase(
     connection.close()
   }
 
+  override def withTransaction[A](isolationLevel: TransactionIsolationLevel)(block: Connection => A): A = {
+    withConnection(block)
+  }
 }
