@@ -3,6 +3,7 @@ import Dependencies._
 name := "database-test-helpers"
 organization := "de.gccc.play"
 scalaVersion := "2.12.8"
+crossScalaVersions := Seq("2.12.8", "2.13.0")
 
 lazy val root = (project in file(".")).settings(
   libraryDependencies ++= Seq(
